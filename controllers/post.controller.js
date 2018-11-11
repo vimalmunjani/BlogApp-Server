@@ -1,3 +1,5 @@
+const Post = require('../models/post.model');
+
 let data = [
     {
         title: 'First Post',
@@ -25,10 +27,12 @@ exports.getPost = (req, res) => {
 
 exports.addPost = (req, res) => {
 
-    let post = req.body;
-    data.push(post);
-    console.log('All post', data);
-    res.status(201).json('Post received');
+    let post = new Post({
+        title: req.body.title,
+        content: req.body.content
+    });
+
+    res.status(201).json(post);
 
 }
 
