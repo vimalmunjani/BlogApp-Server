@@ -1,26 +1,19 @@
 const Post = require('../models/post.model');
 
-let data = [
-    {
-        title: 'First Post',
-        content: 'I am first post'
-    },
-    {
-        title: 'Second Post',
-        content: 'I am Second post'
-    },
-    {
-        title: 'Third Post',
-        content: 'I am Third post'
-    }
-];
-
 exports.getPost = (req, res) => {
 
-    res.status(200).json({
-        status: 200,
-        message: 'Get Post Successful',
-        data: data
+    Post.find().then(posts => {
+        res.status(200).json({
+            status: 200,
+            message: 'Get Post Successful',
+            data: posts
+        });
+    }).catch(err => {
+        res.status(404).json({
+            status: 404,
+            message: 'Get Post unuccessful',
+            data: err.message
+        });
     });
 
 }
@@ -32,7 +25,19 @@ exports.addPost = (req, res) => {
         content: req.body.content
     });
 
-    res.status(201).json(post);
+    post.save().then((post) => {
+        res.status(201).json({
+            status: 201,
+            message: 'Post Added Successfully',
+            data: post
+        });
+    }).catch(err => {
+        res.status(400).json({
+            status: 400,
+            message: 'Post not Added',
+            data: err.message
+        });
+    });
 
 }
 
@@ -44,6 +49,32 @@ exports.editPost = (req, res) => {
 
 exports.deletePost = (req, res) => {
 
+    let postId = req.params._id;
 
+
+    Post.findByIdAndDelete(postId)
+    .then((post) => {
+
+        if(!post) {
+            res.status(404).json({
+                status: 404,
+                message: 'Post not deleted',
+                data: 'Post not found'
+            });
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: 'Post deleted',
+            data: post
+        });
+    })
+    .catch(err => {
+        res.status(400).json({
+            status: 400,
+            message: 'Post not deleted',
+            data: err.message
+        });
+    });
 
 }

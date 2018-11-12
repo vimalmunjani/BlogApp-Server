@@ -9,7 +9,8 @@ const connection = mongoose.connect(
 		reconnectInterval: 500,
 		poolSize: 50,
 		bufferMaxEntries: 0,
-		keepAlive: 120
+        keepAlive: 120,
+        useNewUrlParser: true
     }
 );
 
